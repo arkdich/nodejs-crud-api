@@ -1,8 +1,14 @@
 import { IUser } from './userDb_d'
 
 class UserDb {
-  private users: IUser[] = []
-  private counter = 1
+  private users: IUser[] = [
+    { id: 1, username: 'Artemy', age: 25, hobbies: [] },
+    { id: 2, username: 'Artemy', age: 24, hobbies: ['tennis'] },
+    { id: 3, username: 'Artemy', age: 22, hobbies: ['video games'] },
+    { id: 5, username: 'Artemy', age: 21, hobbies: [] },
+    { id: 42, username: 'Artemy', age: 21, hobbies: [] },
+  ]
+  private counter = 42
 
   add(data: Omit<IUser, 'id'>) {
     const user: IUser = {
@@ -18,11 +24,11 @@ class UserDb {
   get(id: number) {
     const user = this.users.find((user) => user.id === id)
 
-    if (!user) {
-      throw new Error(`User with id ${id} not found`)
-    }
+    // if (!user) {
+    //   throw new Error(`User with id ${id} not found`)
+    // }
 
-    return user
+    return user ?? null
   }
 
   getAll() {

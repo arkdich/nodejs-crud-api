@@ -2,6 +2,8 @@ import 'dotenv/config'
 import { createServer, request } from 'http'
 import { createUser } from './api/users/create-user.ts'
 import { userDb } from './db/userDb.ts'
+import { getUsers } from './api/users/get-users.ts'
+import { getUser } from './api/users/get-user.ts'
 
 const PORT = process.env.SERVER_PORT
 
@@ -10,8 +12,15 @@ const server = createServer((req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/users') {
     createUser(req, res)
+  } else if (req.method === 'GET' && req.url === '/api/users') {
+    getUsers(req, res)
+  } else if (
+    req.method === 'GET' &&
+    /\/api\/users\/\d+/gi.test(String(req.url))
+  ) {
+    getUser(req, res)
   } else {
-    res.writeHead(404, 'Not found', {
+    res.writeHead(404, {
       'content-type': 'plain/text',
     })
 
@@ -23,18 +32,20 @@ server.on('listening', () => {
   console.log(`Server running on http://localhost:${PORT}`)
 
   const clientRequest = request({
-    method: 'POST',
+    method: 'GET',
     protocol: 'http:',
     host: 'localhost',
-    path: '/api/users',
+    path: '/api/users/4',
     port: PORT,
-  }).end(JSON.stringify({ username: 'Artemy', age: 25, hobbies: [] }))
+  }).end()
+  // .end(JSON.stringify({ username: 'Artemy', age: 25, hobbies: [] }))
 
   clientRequest.on('response', (res) => {
-    console.log(`Response: ${res.statusCode} ${res.statusMessage}`)
+    console.log(`\n--------\nResponse: ${res.statusCode} ${res.statusMessage}`)
 
     res.setEncoding('utf-8').on('data', (chunk) => {
-      console.log(`Chunk: ${chunk}`)
+      process.stdout.write('Body: ')
+      console.log(chunk)
     })
   })
 })
