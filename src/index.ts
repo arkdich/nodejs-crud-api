@@ -31,7 +31,7 @@ server.on('listening', () => {
     port: PORT,
   })
 
-  clientRequest.end('fdfodfk')
+  clientRequest.end()
 })
 
 server.listen(PORT)
