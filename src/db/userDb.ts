@@ -1,4 +1,4 @@
-import { IUser } from './userDb.d'
+import { IUser } from './userDb_d'
 
 class UserDb {
   private users: IUser[] = []
@@ -11,6 +11,8 @@ class UserDb {
     }
 
     this.users.push(user)
+
+    return user
   }
 
   get(id: number) {
@@ -37,6 +39,8 @@ class UserDb {
     user.age = data.age
     user.username = data.username
     user.hobbies = data.hobbies
+
+    return user
   }
 
   delete(id: number) {
@@ -47,6 +51,8 @@ class UserDb {
     }
 
     this.users = filtered
+
+    return id
   }
 }
 

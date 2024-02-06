@@ -1,37 +1,53 @@
 import 'dotenv/config'
-import { createReadStream } from 'fs'
 import { createServer, request } from 'http'
+import { createUser } from './api/users/create-user.ts'
+import { userDb } from './db/userDb.ts'
 
 const PORT = process.env.SERVER_PORT
 
 const server = createServer((req, res) => {
-  console.log(`Incoming ${req.method} request`)
+  console.log(`Request: ${req.method} ${req.url}`)
 
-  const readStream = createReadStream('src/static/text.txt')
-  readStream.pipe(res)
+  if (req.method === 'POST' && req.url === '/api/users') {
+    createUser(req, res)
+  } else {
+    res.writeHead(404, 'Not found', {
+      'content-type': 'plain/text',
+    })
 
-  res.writeHead(200, 'OK', {
-    'content-type': 'plain/text',
-  })
-
-  readStream.on('end', () => {
     res.end()
-  })
+  }
 })
 
 server.on('listening', () => {
-  console.log(
-    `Server is listening on port ${PORT}\nAccess on http://localhost:${PORT}`
-  )
+  console.log(`Server running on http://localhost:${PORT}`)
 
   const clientRequest = request({
     method: 'POST',
     protocol: 'http:',
-    origin: 'localhost',
+    host: 'localhost',
+    path: '/api/users',
     port: PORT,
-  })
+  }).end(JSON.stringify({ username: 'Artemy', age: 25, hobbies: [] }))
 
-  clientRequest.end()
+  clientRequest.on('response', (res) => {
+    console.log(`Response: ${res.statusCode} ${res.statusMessage}`)
+
+    res.setEncoding('utf-8').on('data', (chunk) => {
+      console.log(`Chunk: ${chunk}`)
+    })
+  })
+})
+
+process.stdin.on('data', (chunk) => {
+  const input = chunk.toString().trim()
+
+  if (input === 'list') {
+    process.stdout.write('users: ')
+    console.dir(userDb.getAll())
+  }
 })
 
 server.listen(PORT)
+
+// curl -X POST http://localhost:3000/api/users -d '{"username":"Artemy","age":25,"hobbies":[]}'
