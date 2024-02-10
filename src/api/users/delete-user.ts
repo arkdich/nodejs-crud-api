@@ -1,10 +1,10 @@
 import { IncomingMessage, ServerResponse } from 'http'
 import { userDb } from '../../db/userDb.ts'
-import { ResponseError } from '../../lib/constants.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
+import { ResponseError } from '../../lib/constants.ts'
 import { validate } from 'uuid'
 
-export const getUser = (
+export const deleteUser = (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
@@ -15,14 +15,10 @@ export const getUser = (
       throw new ResponseError(400, 'Bad input, invalid user id')
     }
 
-    const user = userDb.get(id)
+    userDb.delete(id)
 
-    if (!user) {
-      throw new ResponseError(404, `User with id ${id} not found`)
-    }
-
-    res.statusCode = 200
-    res.end(JSON.stringify(user))
+    res.statusCode = 204
+    res.end()
   } catch (err: any) {
     respondeWithError(res, err.code, err.message)
   }

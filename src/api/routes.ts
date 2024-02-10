@@ -1,6 +1,8 @@
 import { createUser } from './users/create-user.ts'
+import { deleteUser } from './users/delete-user.ts'
 import { getUser } from './users/get-user.ts'
 import { getUsers } from './users/get-users.ts'
+import { updateUser } from './users/update-user.ts'
 
 export const API_ROUTES = {
   GET: [
@@ -8,6 +10,8 @@ export const API_ROUTES = {
     { method: 'GET', path: /^\/api\/users\/.*$/i, handler: getUser },
   ],
   POST: [{ method: 'POST', path: /^\/api\/users$/i, handler: createUser }],
-  PUT: [],
-  DELETE: [],
+  PUT: [{ method: 'PUT', path: /^\/api\/users\/.*$/i, handler: updateUser }],
+  DELETE: [
+    { method: 'DELETE', path: /^\/api\/users\/.*$/i, handler: deleteUser },
+  ],
 }
