@@ -4,41 +4,35 @@ import { createUser } from './api/users/create-user.ts'
 import { userDb } from './db/userDb.ts'
 import { getUsers } from './api/users/get-users.ts'
 import { getUser } from './api/users/get-user.ts'
+import { handleRequest } from './lib/handle-request.ts'
 
-const PORT = process.env.SERVER_PORT
+const PORT = Number(process.env.SERVER_PORT)
+const HOSTNAME = 'localhost'
 
 const server = createServer((req, res) => {
   console.log(`Request: ${req.method} ${req.url}`)
 
-  if (req.method === 'POST' && req.url === '/api/users') {
-    createUser(req, res)
-  } else if (req.method === 'GET' && req.url === '/api/users') {
-    getUsers(req, res)
-  } else if (
-    req.method === 'GET' &&
-    /\/api\/users\/\d+/gi.test(String(req.url))
-  ) {
-    getUser(req, res)
-  } else {
+  try {
+    handleRequest(req, res)
+  } catch (err: any) {
     res.writeHead(404, {
       'content-type': 'plain/text',
     })
 
-    res.end()
+    res.end(err.message)
   }
 })
 
-server.on('listening', () => {
-  console.log(`Server running on http://localhost:${PORT}`)
+server.listen(PORT, HOSTNAME, () => {
+  console.log(`Server running at http://${HOSTNAME}:${PORT}`)
 
   const clientRequest = request({
     method: 'GET',
     protocol: 'http:',
     host: 'localhost',
-    path: '/api/users/4',
+    path: '/api/users/42',
     port: PORT,
   }).end()
-  // .end(JSON.stringify({ username: 'Artemy', age: 25, hobbies: [] }))
 
   clientRequest.on('response', (res) => {
     console.log(`\n--------\nResponse: ${res.statusCode} ${res.statusMessage}`)
@@ -57,8 +51,10 @@ process.stdin.on('data', (chunk) => {
     process.stdout.write('users: ')
     console.dir(userDb.getAll())
   }
-})
 
-server.listen(PORT)
+  if (input === 'clear') {
+    console.clear()
+  }
+})
 
 // curl -X POST http://localhost:3000/api/users -d '{"username":"Artemy","age":25,"hobbies":[]}'
