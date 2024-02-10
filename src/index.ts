@@ -1,10 +1,8 @@
 import 'dotenv/config'
 import { createServer, request } from 'http'
-import { createUser } from './api/users/create-user.ts'
 import { userDb } from './db/userDb.ts'
-import { getUsers } from './api/users/get-users.ts'
-import { getUser } from './api/users/get-user.ts'
 import { handleRequest } from './lib/handle-request.ts'
+import { MIME_TYPES } from './lib/constants.ts'
 
 const PORT = Number(process.env.SERVER_PORT)
 const HOSTNAME = 'localhost'
@@ -12,15 +10,9 @@ const HOSTNAME = 'localhost'
 const server = createServer((req, res) => {
   console.log(`Request: ${req.method} ${req.url}`)
 
-  try {
-    handleRequest(req, res)
-  } catch (err: any) {
-    res.writeHead(404, {
-      'content-type': 'plain/text',
-    })
+  res.setHeader('Content-Type', MIME_TYPES.JSON)
 
-    res.end(err.message)
-  }
+  handleRequest(req, res)
 })
 
 server.listen(PORT, HOSTNAME, () => {

@@ -7,7 +7,6 @@ export const getUsers = (
 ) => {
   const users = userDb.getAll()
 
-  res
-    .writeHead(200, { 'content-type': 'application/json' })
-    .end(JSON.stringify(users))
+  res.statusCode = 200
+  res.end(JSON.stringify(users))
 }

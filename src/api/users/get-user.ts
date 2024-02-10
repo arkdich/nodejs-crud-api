@@ -1,33 +1,28 @@
 import { IncomingMessage, ServerResponse } from 'http'
 import { userDb } from '../../db/userDb.ts'
-import { MIME_TYPES } from '../../lib/constants.ts'
+import { MIME_TYPES, ResponseError } from '../../lib/constants.ts'
+import { respondeWithError } from '../../lib/responde-with-error.ts'
 
 export const getUser = (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
-  const id = Number(req.url?.match(/\d+/gi)?.at(0))
-
-  if (isNaN(id)) {
-    res.statusCode = 400
-    res.end('Bad input, incorrect user id')
-    return
-  }
-
   try {
+    const id = Number(req.url?.match(/\d+/gi)?.at(0))
+
+    if (isNaN(id)) {
+      throw new ResponseError(400, 'Bad input, incorrect user id')
+    }
+
     const user = userDb.get(id)
 
     if (!user) {
-      res.statusCode = 404
-      res.end()
-      return
+      throw new ResponseError(404, 'User not found')
     }
 
-    res
-      .writeHead(200, { 'content-type': MIME_TYPES.JSON })
-      .end(JSON.stringify(user))
+    res.statusCode = 200
+    res.end(JSON.stringify(user))
   } catch (err: any) {
-    res.statusCode = 400
-    res.end(err.message)
+    respondeWithError(res, err.code, err.message)
   }
 }

@@ -1,6 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http'
 import { userDb } from '../../db/userDb.ts'
 import { IUser } from '../../db/userDb_d.ts'
+import { respondeWithError } from '../../lib/responde-with-error.ts'
+import { ResponseError } from '../../lib/constants.ts'
 
 export const createUser = (
   req: IncomingMessage,
@@ -15,18 +17,15 @@ export const createUser = (
         !userData.username ||
         !Array.isArray(userData.hobbies)
       ) {
-        res.statusCode = 400
-        res.end('Bad input, missing required fields')
-        return
+        throw new ResponseError(400, 'Bad input, missing required fields')
       }
 
       const user = userDb.add(userData)
 
-      res.writeHead(201, { 'content-type': 'application/json' })
+      res.statusCode = 201
       res.end(JSON.stringify(user))
     } catch (err: any) {
-      res.statusCode = 500
-      res.end(err.message)
+      respondeWithError(res, err.code, err.message)
     }
   })
 }

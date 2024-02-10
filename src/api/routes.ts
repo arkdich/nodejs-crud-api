@@ -7,7 +7,7 @@ export const API_ROUTES = {
     { method: 'GET', path: /^\/api\/users$/i, handler: getUsers },
     { method: 'GET', path: /^\/api\/users\/\d+$/i, handler: getUser },
   ],
-  POST: [{ method: 'POST', path: /^\/api\/users$/, handler: createUser }],
+  POST: [{ method: 'POST', path: /^\/api\/users$/i, handler: createUser }],
   PUT: [],
   DELETE: [],
 }
