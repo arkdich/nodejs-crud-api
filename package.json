@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/arkdich/nodejs-crud-api#readme",
   "dependencies": {
-    "dotenv": "^16.4.1"
+    "@types/uuid": "^9.0.8",
+    "dotenv": "^16.4.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",

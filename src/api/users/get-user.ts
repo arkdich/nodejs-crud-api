@@ -1,23 +1,24 @@
 import { IncomingMessage, ServerResponse } from 'http'
 import { userDb } from '../../db/userDb.ts'
-import { MIME_TYPES, ResponseError } from '../../lib/constants.ts'
+import { ResponseError } from '../../lib/constants.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
+import { validate } from 'uuid'
 
 export const getUser = (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
   try {
-    const id = Number(req.url?.match(/\d+/gi)?.at(0))
+    const id = req.url?.split('/')[3]
 
-    if (isNaN(id)) {
+    if (!id || !validate(id)) {
       throw new ResponseError(400, 'Bad input, incorrect user id')
     }
 
     const user = userDb.get(id)
 
     if (!user) {
-      throw new ResponseError(404, 'User not found')
+      throw new ResponseError(404, `User with id ${id} not found`)
     }
 
     res.statusCode = 200

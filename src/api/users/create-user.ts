@@ -12,12 +12,19 @@ export const createUser = (
     try {
       const userData: Omit<IUser, 'id'> = JSON.parse(chunk)
 
+      const isHobbiesFieldValid =
+        Array.isArray(userData.hobbies) &&
+        userData.hobbies.every((hobbie) => typeof hobbie === 'string')
+
       if (
-        !userData.age ||
-        !userData.username ||
-        !Array.isArray(userData.hobbies)
+        typeof userData.age !== 'number' ||
+        typeof userData.username !== 'string' ||
+        !isHobbiesFieldValid
       ) {
-        throw new ResponseError(400, 'Bad input, missing required fields')
+        throw new ResponseError(
+          400,
+          'Bad input, missing required fields or wrong data'
+        )
       }
 
       const user = userDb.add(userData)
