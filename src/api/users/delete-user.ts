@@ -19,7 +19,7 @@ export const deleteUser = async (
     await remoteProvider.delete(id)
     // userDb.delete(id)
 
-    res.statusCode = 200
+    res.statusCode = 204
     res.end()
   } catch (err: any) {
     respondeWithError(res, err.code, err.message)

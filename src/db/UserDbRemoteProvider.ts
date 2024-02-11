@@ -1,6 +1,7 @@
 import { Socket, createConnection } from 'node:net'
 import path from 'node:path'
 import { IUser, IUserCollection } from './userDb_d.ts'
+import { ResponseError } from '../lib/constants.ts'
 
 export class UserDbRemoteProvider implements IUserCollection {
   private static connection: Socket | null = null
@@ -13,7 +14,7 @@ export class UserDbRemoteProvider implements IUserCollection {
     const connect = () => {
       setTimeout(() => {
         const client = createConnection(path, () => {
-          console.log('Connection created')
+          console.log('Connection to user db created')
         })
 
         client.on('error', (err: any) => {
@@ -47,8 +48,11 @@ export class UserDbRemoteProvider implements IUserCollection {
       )
 
       UserDbRemoteProvider.connection.on('data', (chunk) => {
-        const data = chunk.toString()
-        const response = JSON.parse(data) as IUser
+        const response = JSON.parse(chunk.toString())
+
+        if (response?.code && response?.message) {
+          return reject(new ResponseError(response.code, response.message))
+        }
 
         resolve(response)
       })
@@ -75,8 +79,11 @@ export class UserDbRemoteProvider implements IUserCollection {
       )
 
       UserDbRemoteProvider.connection.on('data', (chunk) => {
-        const data = chunk.toString()
-        const response = JSON.parse(data) as IUser
+        const response = JSON.parse(chunk.toString())
+
+        if (response?.code && response?.message) {
+          return reject(new ResponseError(response.code, response.message))
+        }
 
         resolve(response)
       })
@@ -100,8 +107,11 @@ export class UserDbRemoteProvider implements IUserCollection {
       )
 
       UserDbRemoteProvider.connection.on('data', (chunk) => {
-        const data = chunk.toString()
-        const response = JSON.parse(data) as IUser[]
+        const response = JSON.parse(chunk.toString())
+
+        if (response?.code && response?.message) {
+          return reject(new ResponseError(response.code, response.message))
+        }
 
         resolve(response)
       })
@@ -126,8 +136,11 @@ export class UserDbRemoteProvider implements IUserCollection {
       )
 
       UserDbRemoteProvider.connection.on('data', (chunk) => {
-        const data = chunk.toString()
-        const response = JSON.parse(data) as IUser
+        const response = JSON.parse(chunk.toString())
+
+        if (response?.code && response?.message) {
+          return reject(new ResponseError(response.code, response.message))
+        }
 
         resolve(response)
       })
@@ -152,9 +165,13 @@ export class UserDbRemoteProvider implements IUserCollection {
       )
 
       UserDbRemoteProvider.connection.on('data', (chunk) => {
-        const data = chunk.toString()
+        const response = JSON.parse(chunk.toString())
 
-        resolve(data)
+        if (response?.code && response?.message) {
+          return reject(new ResponseError(response.code, response.message))
+        }
+
+        resolve(response)
       })
 
       UserDbRemoteProvider.connection.on('error', (err) => {
