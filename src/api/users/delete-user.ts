@@ -3,8 +3,9 @@ import { userDb } from '../../db/userDb.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
 import { ResponseError } from '../../lib/constants.ts'
 import { validate } from 'uuid'
+import { remoteProvider } from '../../db/UserDbRemoteProvider.ts'
 
-export const deleteUser = (
+export const deleteUser = async (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
@@ -15,9 +16,10 @@ export const deleteUser = (
       throw new ResponseError(400, 'Bad input, invalid user id')
     }
 
-    userDb.delete(id)
+    await remoteProvider.delete(id)
+    // userDb.delete(id)
 
-    res.statusCode = 204
+    res.statusCode = 200
     res.end()
   } catch (err: any) {
     respondeWithError(res, err.code, err.message)

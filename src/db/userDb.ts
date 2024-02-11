@@ -2,7 +2,7 @@ import { ResponseError } from '../lib/constants.ts'
 import { IUser } from './userDb_d'
 import { v4 as generateId } from 'uuid'
 
-class UserDb {
+export class UserDb {
   private users: IUser[] = []
 
   add(data: Omit<IUser, 'id'>) {
@@ -48,6 +48,8 @@ class UserDb {
     }
 
     this.users = filtered
+
+    return id
   }
 }
 

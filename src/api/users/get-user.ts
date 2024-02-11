@@ -3,8 +3,9 @@ import { userDb } from '../../db/userDb.ts'
 import { ResponseError } from '../../lib/constants.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
 import { validate } from 'uuid'
+import { remoteProvider } from '../../db/UserDbRemoteProvider.ts'
 
-export const getUser = (
+export const getUser = async (
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) => {
@@ -15,7 +16,9 @@ export const getUser = (
       throw new ResponseError(400, 'Bad input, invalid user id')
     }
 
-    const user = userDb.get(id)
+    // const user = userDb.get(id)
+
+    const user = await remoteProvider.get(id)
 
     if (!user) {
       throw new ResponseError(404, `User with id ${id} not found`)
