@@ -1,9 +1,9 @@
 import { Socket, createConnection } from 'node:net'
 import path from 'node:path'
-import { IUser, IUserCollection } from './userDb_d.ts'
+import { IUser, IUserDbProvider } from './userDb_d.ts'
 import { ResponseError } from '../lib/constants.ts'
 
-export class UserDbRemoteProvider implements IUserCollection {
+export class UserDbRemoteProvider implements IUserDbProvider {
   private static connection: Socket | null = null
 
   constructor(path: string) {
@@ -180,8 +180,3 @@ export class UserDbRemoteProvider implements IUserCollection {
     })
   }
 }
-
-const USER_DB_PATH = String(process.env.USER_DB_SOCKET)
-const socketPath = path.resolve(USER_DB_PATH)
-
-export const remoteProvider = new UserDbRemoteProvider(socketPath)

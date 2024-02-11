@@ -3,7 +3,7 @@ import { ResponseError } from '../../lib/constants.ts'
 import { isUserValid } from '../../lib/is-user-valid.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
 import { IUser } from '../../db/userDb_d.ts'
-import { remoteProvider } from '../../db/UserDbRemoteProvider.ts'
+import { UserDbController } from '../../db/UserDbController.ts'
 
 export const updateUser = (
   req: IncomingMessage,
@@ -25,8 +25,8 @@ export const updateUser = (
         throw new ResponseError(400, 'Bad input, invalid data or user id')
       }
 
-      const user = await remoteProvider.update(updatedData)
-      // const user = userDb.update(updatedData)
+      const userDb = new UserDbController()
+      const user = await userDb.update(updatedData)
 
       res.statusCode = 200
       res.end(JSON.stringify(user))

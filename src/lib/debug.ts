@@ -10,3 +10,13 @@ export const logRequestInfo = (req: IncomingMessage) => {
     console.log(`Request at ${address.port}: ${req.method} ${req.url}`)
   }
 }
+
+export const logOnListen = (hostname: string, port: number) => {
+  if (cluster.isPrimary) {
+    console.log(`Server running at http://${hostname}:${port}`)
+  } else {
+    console.log(
+      `Server with pid ${process.pid} running at http://${hostname}:${port}`
+    )
+  }
+}

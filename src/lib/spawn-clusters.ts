@@ -2,9 +2,9 @@ import { availableParallelism } from 'node:os'
 import cluster from 'node:cluster'
 
 export const spawnClusters = (port: number) => {
-  const clustersCount = availableParallelism() - 1
+  const clustersCount = availableParallelism()
 
-  for (let index = 1; index <= clustersCount; index++) {
+  for (let index = 1; index < clustersCount; index++) {
     cluster.fork({
       SERVER_PORT: port + index,
     })

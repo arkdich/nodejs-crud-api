@@ -1,12 +1,13 @@
 import 'dotenv/config'
 import { createServer } from 'node:http'
+import cluster from 'node:cluster'
+import path from 'node:path'
 import { handleRequest } from './lib/handle-request.ts'
 import { MIME_TYPES } from './lib/constants.ts'
-import cluster from 'node:cluster'
 import { setupLoadBalancer } from './lib/setup-load-balancer.ts'
-import { logRequestInfo } from './lib/debug.ts'
-import path from 'node:path'
+import { logOnListen, logRequestInfo } from './lib/debug.ts'
 import { setupUserDb } from './lib/setup-user-db.ts'
+import { setupDbProvider } from './db/setup-db-provider.ts'
 
 const HOSTNAME = 'localhost'
 const PORT = Number(process.env.SERVER_PORT)
@@ -27,8 +28,8 @@ if (IS_MULTI && cluster.isPrimary) {
   })
 
   server.listen(PORT, HOSTNAME, () => {
-    console.log(
-      `Server with pid ${process.pid} running at http://${HOSTNAME}:${PORT}`
-    )
+    logOnListen(HOSTNAME, PORT)
   })
 }
+
+setupDbProvider(IS_MULTI)

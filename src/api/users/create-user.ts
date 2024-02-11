@@ -1,10 +1,9 @@
-import { IncomingMessage, ServerResponse } from 'http'
-import { userDb } from '../../db/userDb.ts'
+import { IncomingMessage, ServerResponse } from 'node:http'
 import { IUser } from '../../db/userDb_d.ts'
 import { respondeWithError } from '../../lib/responde-with-error.ts'
 import { ResponseError } from '../../lib/constants.ts'
 import { isUserValid } from '../../lib/is-user-valid.ts'
-import { remoteProvider } from '../../db/UserDbRemoteProvider.ts'
+import { UserDbController } from '../../db/UserDbController.ts'
 
 export const createUser = (
   req: IncomingMessage,
@@ -22,9 +21,8 @@ export const createUser = (
         )
       }
 
-      const user = await remoteProvider.add(userData)
-
-      // const user = userDb.add(userData)
+      const userDb = new UserDbController()
+      const user = await userDb.add(userData)
 
       res.statusCode = 201
       res.end(JSON.stringify(user))

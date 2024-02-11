@@ -5,7 +5,7 @@ export interface IUser {
   hobbies: string[]
 }
 
-export interface IUserCollection {
+export interface IUserDbProvider {
   add(data: Omit<IUser, 'id'>): Promise<IUser>
   get(id: string): Promise<IUser | null>
   getAll(): Promise<IUser[]>
