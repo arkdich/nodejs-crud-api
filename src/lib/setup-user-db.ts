@@ -3,7 +3,6 @@ import { UserDb } from '../db/userDb.ts'
 import { ResponseError } from './constants.ts'
 import { unlinkSync } from 'fs'
 import path from 'path'
-import { dir } from 'console'
 
 export const setupUserDb = (path: string) => {
   const userDb = new UserDb()
@@ -68,8 +67,12 @@ export const setupUserDb = (path: string) => {
 
 export const getSocketPath = () => {
   const USER_DB_PATH = String(process.env.USER_DB_SOCKET)
-  // \\\\?\\pipe prefix is needed to work on windows
-  const socketPath = path.join('\\\\?\\pipe', USER_DB_PATH)
 
-  return socketPath
+  // \\\\?\\pipe prefix is needed to work on windows
+  const windowsSocketPath = path.join('\\\\?\\pipe', USER_DB_PATH)
+  const unixSocketPath = path.resolve(USER_DB_PATH)
+
+  const isWin = process.platform === 'win32'
+
+  return isWin ? windowsSocketPath : unixSocketPath
 }
