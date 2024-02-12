@@ -1,5 +1,12 @@
 # Assignment: CRUD API
 
+## How to install
+
+- `git clone git@github.com:arkdich/nodejs-crud-api.git`
+- `npm i`
+- `npm run start:dev` to run single instance in dev mode
+- `npm run start:multi` to run cluster in dev mode
+
 ## Description
 
 Your task is to implement simple CRUD API using in-memory database underneath.
