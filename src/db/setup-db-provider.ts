@@ -1,12 +1,11 @@
-import path from 'node:path'
 import { UserDbRemoteProvider } from './UserDbRemoteProvider.ts'
 import { UserDbController } from './UserDbController.ts'
 import { UserDbInMemoryProvider } from './UserDbInMemoryProvider.ts'
+import { getSocketPath } from '../lib/setup-user-db.ts'
 
 export const setupDbProvider = (isMulti: boolean) => {
   if (isMulti) {
-    const USER_DB_PATH = String(process.env.USER_DB_SOCKET)
-    const socketPath = path.resolve(USER_DB_PATH)
+    const socketPath = getSocketPath()
 
     const remoteProvider = new UserDbRemoteProvider(socketPath)
     new UserDbController(remoteProvider)

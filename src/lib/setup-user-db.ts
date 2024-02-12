@@ -2,6 +2,8 @@ import { createServer } from 'net'
 import { UserDb } from '../db/userDb.ts'
 import { ResponseError } from './constants.ts'
 import { unlinkSync } from 'fs'
+import path from 'path'
+import { dir } from 'console'
 
 export const setupUserDb = (path: string) => {
   const userDb = new UserDb()
@@ -62,4 +64,12 @@ export const setupUserDb = (path: string) => {
       throw err
     }
   })
+}
+
+export const getSocketPath = () => {
+  const USER_DB_PATH = String(process.env.USER_DB_SOCKET)
+  // \\\\?\\pipe prefix is needed to work on windows
+  const socketPath = path.join('\\\\?\\pipe', USER_DB_PATH)
+
+  return socketPath
 }
