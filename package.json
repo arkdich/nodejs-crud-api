@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "start": "cross-env IS_MULTI=false npx nodemon --require ts-node/register",
+    "start:dev": "cross-env IS_MULTI=false npx nodemon --require ts-node/register",
     "start:multi": "cross-env IS_MULTI=true npx nodemon --require ts-node/register"
   },
   "repository": {
