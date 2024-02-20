@@ -1,0 +1,35 @@
+{
+  "name": "nodejs-crud-api",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start:dev": "cross-env IS_MULTI=false npx nodemon --require ts-node/register",
+    "start:multi": "cross-env IS_MULTI=true npx nodemon --require ts-node/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arkdich/nodejs-crud-api.git"
+  },
+  "author": "arkdich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arkdich/nodejs-crud-api/issues"
+  },
+  "homepage": "https://github.com/arkdich/nodejs-crud-api#readme",
+  "dependencies": {
+    "@types/uuid": "^9.0.8",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
